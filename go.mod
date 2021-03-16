@@ -8,4 +8,8 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/kbinani/screenshot v0.0.0-20191211154542-3a185f1ce18f
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
+	github.com/srwiley/oksvg v0.0.0-20210209000435-a757b9cbd472
+	github.com/srwiley/rasterx v0.0.0-20200120212402-85cb7272f5e9
+	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb // indirect
+	golang.org/x/net v0.0.0-20210316092652-d523dce5a7f4 // indirect
 )

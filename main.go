@@ -1,13 +1,11 @@
 package main
 
 import (
+	"PR-Card-Github/pkg/git"
 	"flag"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/kbinani/screenshot"
 	"image/png"
-	"io"
-	"net/http"
 	"os"
 )
 
@@ -18,32 +16,11 @@ var (
 
 func main(){
 	Server = gin.Default()
-	Server.GET("/github/read",ReadImage())
+	Server.GET("/github/read",git.ReadImage())
+	Server.GET("/github/get",git.GetGit())
 	Server.GET("/github/a",A())
 	addr := GetServerPort()
 	Server.Run(addr)
-}
-
-func ReadImage()gin.HandlerFunc {
-	return func(c *gin.Context) {
-		user :=c.GetHeader("user")
-		var url string
-		url = "https://github-readme-stats.vercel.app/api?username="+user+"&count_private=true&show_icons=true"
-		fmt.Println(url)
-		response, err := http.Get(url)
-		if err != nil {
-			panic(err)
-		}
-		defer response.Body.Close()
-
-		file, err := os.Create("save.png")
-		if err != nil {
-			panic(err)
-		}
-		defer file.Close()
-
-		io.Copy(file, response.Body)
-	}
 }
 
 func A()gin.HandlerFunc {
