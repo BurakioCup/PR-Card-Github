@@ -1,17 +1,16 @@
 package git
 
 import (
-	"encoding/base64"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	//"image"
-	//"image/png"
+	"image"
+	"image/png"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
-	//"github.com/srwiley/oksvg"
-	//"github.com/srwiley/rasterx"
+	"github.com/srwiley/oksvg"
+	"github.com/srwiley/rasterx"
 )
 
 func GetGit()gin.HandlerFunc {
@@ -64,32 +63,22 @@ func decode()string{
 		panic(err)
 	}
 	defer in.Close()
-	//defer file.Close()
+	icon, _ := oksvg.ReadIconStream(in)
+	icon.SetTarget(0, 0, float64(w), float64(h))
+	rgba := image.NewRGBA(image.Rect(0, 0, w, h))
+	icon.Draw(rasterx.NewDasher(w, h, rasterx.NewScannerGV(w, h, rgba, rgba.Bounds())), 1)
 
-	fi, _ := in.Stat() //FileInfo interface
-	size := fi.Size()    //ファイルサイズ
+	out, err := os.Create("out.png")
+	if err != nil {
+		panic(err)
+	}
+	defer out.Close()
 
-	data := make([]byte, size)
-	in.Read(data)
-
-
-	return base64.StdEncoding.EncodeToString(data)
-	//icon, _ := oksvg.ReadIconStream(in)
-	//icon.SetTarget(0, 0, float64(w), float64(h))
-	//rgba := image.NewRGBA(image.Rect(0, 0, w, h))
-	//icon.Draw(rasterx.NewDasher(w, h, rasterx.NewScannerGV(w, h, rgba, rgba.Bounds())), 1)
-	//
-	//out, err := os.Create("out.png")
-	//if err != nil {
-	//	panic(err)
-	//}
-	//defer out.Close()
-	//
-	//err = png.Encode(out, rgba)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//return ""
+	err = png.Encode(out, rgba)
+	if err != nil {
+		panic(err)
+	}
+	return ""
 }
 //file, _ := os.Open("save.svg")
 //defer file.Close()
